@@ -1,44 +1,50 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import * as eva from '@eva-design/eva';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { ThemeProvider } from 'styled-components/native';
-import HomeScreen from './screens/home';
-import theme from './theme';
-import OptionsScreen from './screens/options';
+import BottomBar from '@templates/bottom-bar';
+import { AppearanceProvider } from 'react-native-appearance';
+import { EvaIconsPack } from '@ui-kitten/eva-icons';
+import ColorModeProvider, { useColorMode } from '@providers/color-mode';
+import HomeScreen from '@screens/home';
+import OptionsScreen from '@screens/options';
+import Profile from '@screens/profile';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
-const App = () => {
+const TabNavigation = () => {
+  const { colorMode } = useColorMode();
+
   return (
-    <NavigationContainer>
-      <ThemeProvider theme={theme}>
-        <Navigator
-          screenOptions={({ route }) => ({
-            // eslint-disable-next-line react/prop-types
-            tabBarIcon: ({ focused, color, size }) => {
-              let iconName;
-
-              if (route.name === 'Home') {
-                iconName = focused ? 'ios-information-circle' : 'ios-information-circle-outline';
-              } else if (route.name === 'Options') {
-                iconName = focused ? 'ios-list-box' : 'ios-list';
-              }
-
-              // You can return any component that you like here!
-              return <Ionicons name={iconName} size={size} color={color} />;
-            },
-          })}
-          tabBarOptions={{
-            activeTintColor: theme.colors.primary,
-            inactiveTintColor: theme.colors.default,
-          }}
-        >
+    <ThemeProvider theme={eva[colorMode]}>
+      <ApplicationProvider {...eva} theme={eva[colorMode]}>
+        <Navigator tabBar={(props) => <BottomBar {...props} />}>
           <Screen name="Home" component={HomeScreen} />
           <Screen name="Options" component={OptionsScreen} />
+          <Screen name="Profile" component={Profile} />
         </Navigator>
-      </ThemeProvider>
-    </NavigationContainer>
+      </ApplicationProvider>
+    </ThemeProvider>
+  );
+};
+
+const App = () => {
+  return (
+    <>
+      <IconRegistry icons={EvaIconsPack} />
+      <NavigationContainer>
+        <SafeAreaProvider>
+          <AppearanceProvider>
+            <ColorModeProvider>
+              <TabNavigation />
+            </ColorModeProvider>
+          </AppearanceProvider>
+        </SafeAreaProvider>
+      </NavigationContainer>
+    </>
   );
 };
 

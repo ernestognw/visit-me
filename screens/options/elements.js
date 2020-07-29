@@ -1,24 +1,24 @@
 import styled from 'styled-components/native';
+import { Text, Layout } from '@ui-kitten/components';
 
-const ButtonContainer = styled.TouchableOpacity`
-  width: 100px;
-  height: 40px;
-  padding: 12px;
-  border-radius: 10px;
-  background-color: ${(props) => props.theme.colors.primary};
-`;
-
-const ButtonText = styled.Text`
-  font-size: 15px;
-  color: ${(props) => props.theme.colors.lighter};
-  text-align: center;
-`;
-
-const Container = styled.View`
+const Container = styled(Layout)`
   flex-grow: 1;
-  align-items: center;
-  justify-content: center;
-  background-color: ${(props) => props.theme.colors.lighter};
+  padding: 20px;
+  padding-top: ${(props) => (props.pt || 0) + 20}px;
 `;
 
-export { ButtonContainer, ButtonText, Container };
+const Content = styled(Layout)`
+  margin-top: 20px;
+`;
+
+const Row = styled(Layout)`
+  flex-direction: row;
+  padding: 20px 0px;
+  align-items: center;
+`;
+
+const OptionText = styled(Text)`
+  margin-right: auto;
+`;
+
+export { Container, Content, Row, OptionText };

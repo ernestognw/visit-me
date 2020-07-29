@@ -1,16 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Text } from 'react-native';
-import { Container, ButtonContainer, ButtonText } from './elements';
+import { PROVIDER_GOOGLE } from 'react-native-maps';
+import { Text } from '@ui-kitten/components';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { BackgroundMap, Container } from './elements';
 
 const Home = () => {
+  const { top } = useSafeAreaInsets();
+
   return (
-    <Container>
+    <Container pt={top}>
       <StatusBar style="auto" />
-      <Text>Home</Text>
-      <ButtonContainer onPress={() => alert('Hi!')}>
-        <ButtonText>Button</ButtonText>
-      </ButtonContainer>
+      <BackgroundMap provider={PROVIDER_GOOGLE} />
+      <Text category="h5">Home</Text>
     </Container>
   );
 };
