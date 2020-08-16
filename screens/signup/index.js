@@ -4,9 +4,9 @@ import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { emailPattern } from '@config/constants';
+import KeyboardAwareScroll from '@templates/keyboard-aware-scroll';
 import { Icon, Button } from '@ui-kitten/components';
 import { Content, Header, Title, Subtitle, Input, SigninButton } from './elements';
-import KeyboardAwareScroll from '@templates/keyboard-aware-scroll';
 
 const Login = ({ setIsLogged }) => {
   const { top } = useSafeAreaInsets();

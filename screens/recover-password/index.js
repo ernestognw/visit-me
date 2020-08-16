@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { emailPattern } from '@config/constants';
+import KeyboardAwareScroll from '@templates/keyboard-aware-scroll';
 import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import { Icon, Button } from '@ui-kitten/components';
@@ -32,7 +33,7 @@ const Login = () => {
   };
 
   return (
-    <>
+    <KeyboardAwareScroll>
       <StatusBar style="auto" />
       <Header pt={top} level="2">
         <Title category="h5">¿Olvidaste tu contraseña?</Title>
@@ -74,7 +75,7 @@ const Login = () => {
           ¿No tienes cuenta? Crea una.
         </Button>
       </Content>
-    </>
+    </KeyboardAwareScroll>
   );
 };
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import KeyboardAwareScroll from '@templates/keyboard-aware-scroll';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TouchableWithoutFeedback } from 'react-native';
@@ -39,7 +40,7 @@ const Login = ({ setIsLogged }) => {
   };
 
   return (
-    <>
+    <KeyboardAwareScroll>
       <StatusBar style="auto" />
       <Header pt={top} level="2">
         <Title category="h3">Bienvenido</Title>
@@ -89,7 +90,7 @@ const Login = ({ setIsLogged }) => {
           ¿No tienes cuenta? Crea una.
         </Button>
       </Content>
-    </>
+    </KeyboardAwareScroll>
   );
 };
 
