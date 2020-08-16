@@ -30,8 +30,8 @@ const Input = styled(DefaultInput)`
   margin: 5px 0;
 `;
 
-const SigninButton = styled(Button)`
+const BackButton = styled(Button)`
   margin-top: auto;
 `;
 
-export { Content, Header, Title, Subtitle, Input, SigninButton };
+export { Content, Header, Title, Subtitle, Input, BackButton };

@@ -3,24 +3,25 @@ import PropTypes from 'prop-types';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TouchableWithoutFeedback } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { emailPattern } from '@config/constants';
 import { Icon, Button } from '@ui-kitten/components';
 import { Content, Header, Title, Subtitle, Input, SigninButton } from './elements';
 
 const Login = ({ setIsLogged }) => {
   const { top } = useSafeAreaInsets();
-  const [form, setForm] = useState('');
+  const { navigate } = useNavigation();
+  const [form, setForm] = useState({
+    email: '',
+    password: '',
+  });
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [submittedTry, setSubmittedTry] = useState(false);
   const [isEmailError, setIsEmailError] = useState(true);
   const [isPasswordError, setIsPasswordError] = useState(true);
 
   useEffect(() => {
-    setSubmittedTry(false);
-  }, [form]);
-
-  useEffect(() => {
-    setIsEmailError(emailPattern.test(form.email));
+    setIsEmailError(!emailPattern.test(form.email));
   }, [form.email]);
 
   useEffect(() => {
@@ -46,6 +47,8 @@ const Login = ({ setIsLogged }) => {
       </Header>
       <Content>
         <Input
+          autoCapitalize="none"
+          autoCompleteType="email"
           value={form.email}
           label="Correo"
           placeholder="Ingresa tu correo electrónico"
@@ -55,9 +58,11 @@ const Login = ({ setIsLogged }) => {
             submittedTry && isEmailError && <Icon {...props} name="alert-circle-outline" />
           }
           accessoryLeft={(props) => <Icon {...props} name="person-outline" />}
-          onChangeText={(nextValue) => setForm({ ...form, username: nextValue })}
+          onChangeText={(nextValue) => setForm({ ...form, email: nextValue })}
         />
         <Input
+          autoCapitalize="none"
+          autoCompleteType="password"
           value={form.password}
           label="Contraseña"
           placeholder="Ingresa tu contraseña"
@@ -71,11 +76,18 @@ const Login = ({ setIsLogged }) => {
           secureTextEntry={secureTextEntry}
           onChangeText={(nextValue) => setForm({ ...form, password: nextValue })}
         />
-        <Button appearance="ghost" size="tiny">
+        <Button onPress={() => navigate('RecoverPassword')} appearance="ghost" size="tiny">
           ¿Olvidaste tu contraseña?
         </Button>
-        <SigninButton onPress={submit}>Iniciar sesión</SigninButton>
-        <Button appearance="ghost">¿No tienes cuenta? Crea una.</Button>
+        <SigninButton
+          accessoryRight={(props) => <Icon {...props} name="arrowhead-right-outline" />}
+          onPress={submit}
+        >
+          Iniciar sesión
+        </SigninButton>
+        <Button onPress={() => navigate('Signup')} appearance="ghost">
+          ¿No tienes cuenta? Crea una.
+        </Button>
       </Content>
     </>
   );

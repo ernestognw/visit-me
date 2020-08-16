@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import * as eva from '@eva-design/eva';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
@@ -13,30 +14,39 @@ import HomeScreen from '@screens/home';
 import OptionsScreen from '@screens/options';
 import Profile from '@screens/profile';
 import Login from '@screens/login';
+import Signup from '@screens/signup';
+import RecoverPassword from '@screens/recover-password';
 
-const { Navigator, Screen } = createBottomTabNavigator();
+const { Navigator: BottomNavigator, Screen } = createBottomTabNavigator();
+const { Navigator: StackNavigator, Screen: AuthScreen } = createStackNavigator();
 
 const TabNavigation = () => {
   // TO DO(jabdo): Apply actual login logic here
-  const [isLogged, setIsLogged] = useState(false);
+  const [isLogged, setIsLogged] = useState(true);
   const { colorMode } = useColorMode();
 
   return (
     <ThemeProvider theme={eva[colorMode]}>
       <ApplicationProvider {...eva} theme={eva[colorMode]}>
-        <Navigator tabBar={(props) => <BottomBar isLogged={isLogged} {...props} />}>
-          {isLogged ? (
-            <>
+        {isLogged ? (
+          <>
+            <BottomNavigator tabBar={(props) => <BottomBar isLogged={isLogged} {...props} />}>
               <Screen name="Home" component={HomeScreen} />
-              <Screen name="Options" component={OptionsScreen} />
+              <Screen name="Options">{() => <OptionsScreen setIsLogged={setIsLogged} />}</Screen>
               <Screen name="Profile" component={Profile} />
-            </>
-          ) : (
-            <>
-              <Screen name="Login">{() => <Login setIsLogged={setIsLogged} />}</Screen>
-            </>
-          )}
-        </Navigator>
+            </BottomNavigator>
+          </>
+        ) : (
+          <>
+            <StackNavigator headerMode="none">
+              <AuthScreen name="Login">{() => <Login setIsLogged={setIsLogged} />}</AuthScreen>
+              <AuthScreen name="Signup">{() => <Signup setIsLogged={setIsLogged} />}</AuthScreen>
+              <AuthScreen name="RecoverPassword">
+                {() => <RecoverPassword setIsLogged={setIsLogged} />}
+              </AuthScreen>
+            </StackNavigator>
+          </>
+        )}
       </ApplicationProvider>
     </ThemeProvider>
   );
