@@ -9,7 +9,7 @@ module.exports = (api) => {
           root: ['./'],
           alias: {
             '@templates': './templates',
-            '@config': './screens',
+            '@config': './config',
             '@assets': './assets',
             '@screens': './screens',
             '@providers': './providers',

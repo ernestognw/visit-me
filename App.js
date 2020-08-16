@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import * as eva from '@eva-design/eva';
@@ -12,19 +12,30 @@ import ColorModeProvider, { useColorMode } from '@providers/color-mode';
 import HomeScreen from '@screens/home';
 import OptionsScreen from '@screens/options';
 import Profile from '@screens/profile';
+import Login from '@screens/login';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
 const TabNavigation = () => {
+  // TO DO(jabdo): Apply actual login logic here
+  const [isLogged, setIsLogged] = useState(false);
   const { colorMode } = useColorMode();
 
   return (
     <ThemeProvider theme={eva[colorMode]}>
       <ApplicationProvider {...eva} theme={eva[colorMode]}>
-        <Navigator tabBar={(props) => <BottomBar {...props} />}>
-          <Screen name="Home" component={HomeScreen} />
-          <Screen name="Options" component={OptionsScreen} />
-          <Screen name="Profile" component={Profile} />
+        <Navigator tabBar={(props) => <BottomBar isLogged={isLogged} {...props} />}>
+          {isLogged ? (
+            <>
+              <Screen name="Home" component={HomeScreen} />
+              <Screen name="Options" component={OptionsScreen} />
+              <Screen name="Profile" component={Profile} />
+            </>
+          ) : (
+            <>
+              <Screen name="Login">{() => <Login setIsLogged={setIsLogged} />}</Screen>
+            </>
+          )}
         </Navigator>
       </ApplicationProvider>
     </ThemeProvider>
