@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { StatusBar } from 'expo-status-bar';
 import { TouchableOpacity } from 'react-native';
-import { Text, Divider, Toggle, Icon, Button, Card, Modal, useTheme } from '@ui-kitten/components';
+import { Text, Divider, Icon, Button, Card, Modal, useTheme } from '@ui-kitten/components';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Container, Content, Row, OptionText } from './elements';
 
