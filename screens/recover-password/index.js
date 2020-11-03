@@ -28,7 +28,6 @@ const Login = () => {
 
     Alert.alert('Correo de recuperación enviado');
 
-    // TODO(jabdo): Replace with recover password logic here
     navigate('Login');
   };
 

@@ -9,7 +9,6 @@ import { ThemeProvider } from 'styled-components/native';
 import BottomBar from '@templates/bottom-bar';
 import { AppearanceProvider } from 'react-native-appearance';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
-import ColorModeProvider, { useColorMode } from '@providers/color-mode';
 import HomeScreen from '@screens/home';
 import OptionsScreen from '@screens/options';
 import Profile from '@screens/profile';
@@ -21,13 +20,11 @@ const { Navigator: BottomNavigator, Screen } = createBottomTabNavigator();
 const { Navigator: StackNavigator, Screen: AuthScreen } = createStackNavigator();
 
 const TabNavigation = () => {
-  // TO DO(jabdo): Apply actual login logic here
   const [isLogged, setIsLogged] = useState(true);
-  const { colorMode } = useColorMode();
 
   return (
-    <ThemeProvider theme={eva[colorMode]}>
-      <ApplicationProvider {...eva} theme={eva[colorMode]}>
+    <ThemeProvider theme={eva.dark}>
+      <ApplicationProvider {...eva} theme={eva.dark}>
         {isLogged ? (
           <>
             <BottomNavigator tabBar={(props) => <BottomBar isLogged={isLogged} {...props} />}>
@@ -59,9 +56,7 @@ const App = () => {
       <NavigationContainer>
         <SafeAreaProvider>
           <AppearanceProvider>
-            <ColorModeProvider>
-              <TabNavigation />
-            </ColorModeProvider>
+            <TabNavigation />
           </AppearanceProvider>
         </SafeAreaProvider>
       </NavigationContainer>

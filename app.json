@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "eugenioapp",
-    "slug": "eugenioapp",
+    "name": "visitMe",
+    "slug": "visitMe",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

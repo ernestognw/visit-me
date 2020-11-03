@@ -1,9 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { PROVIDER_GOOGLE } from 'react-native-maps';
 import { Text } from '@ui-kitten/components';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { BackgroundMap, Container } from './elements';
+import { Container } from './elements';
 
 const Home = () => {
   const { top } = useSafeAreaInsets();
@@ -11,8 +10,7 @@ const Home = () => {
   return (
     <Container pt={top}>
       <StatusBar style="auto" />
-      <BackgroundMap provider={PROVIDER_GOOGLE} />
-      <Text category="h5">Home</Text>
+      <Text category="h5">Profile</Text>
     </Container>
   );
 };

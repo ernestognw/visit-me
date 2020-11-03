@@ -35,7 +35,6 @@ const Login = ({ setIsLogged }) => {
       return;
     }
 
-    // TODO(jabdo): Replace with actual login here
     setIsLogged(true);
   };
 
