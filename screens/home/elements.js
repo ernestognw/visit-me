@@ -3,8 +3,7 @@ import { Layout, Button } from '@ui-kitten/components';
 
 const Container = styled(Layout)`
   flex-grow: 1;
-  padding: 20px;
-  padding-top: ${(props) => (props.pt || 0) + 20}px;
+  padding: 0 20px;
 `;
 
 const AvatarSection = styled.View`

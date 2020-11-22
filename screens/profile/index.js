@@ -3,17 +3,15 @@ import PropTypes from 'prop-types';
 import { StatusBar } from 'expo-status-bar';
 import { TouchableOpacity } from 'react-native';
 import { Text, Divider, Icon, Button, Card, Modal, useTheme } from '@ui-kitten/components';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Container, Content, Row, OptionText } from './elements';
 
 const Options = ({ setIsLogged }) => {
   const [exitModal, toggleExitModal] = useState(false);
   const theme = useTheme();
-  const { top } = useSafeAreaInsets();
 
   return (
     <>
-      <Container pt={top}>
+      <Container>
         <StatusBar style="auto" />
         <Text category="h5">Profile</Text>
         <Content>

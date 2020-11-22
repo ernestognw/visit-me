@@ -1,14 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Avatar, Text, Card, Icon } from '@ui-kitten/components';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Container, AvatarSection, TextSection, AddButton } from './elements';
+import { Avatar, Text, Card } from '@ui-kitten/components';
+import { Container, AvatarSection, TextSection } from './elements';
 
 const Home = () => {
-  const { top } = useSafeAreaInsets();
-
   return (
-    <Container pt={top}>
+    <Container>
       <StatusBar style="auto" />
       <AvatarSection>
         <Avatar
@@ -24,13 +21,10 @@ const Home = () => {
         </TextSection>
       </AvatarSection>
       <Card status="primary">
-        <Text category="c1">You&apos;ve had</Text>
+        <Text category="c1">Has tenido</Text>
         <Text category="h1">6</Text>
-        <Text category="c1">visits las month</Text>
+        <Text category="c1">visitas este mes</Text>
       </Card>
-      <AddButton accessoryRight={(props) => <Icon {...props} name="plus-outline" />}>
-        Crear acceso
-      </AddButton>
     </Container>
   );
 };

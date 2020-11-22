@@ -1,0 +1,13 @@
+import styled from 'styled-components/native';
+import { Layout, Button } from '@ui-kitten/components';
+
+const Container = styled(Layout)`
+  flex-grow: 1;
+  padding: 20px;
+`;
+
+const AddButton = styled(Button)`
+  margin-top: 20px;
+`;
+
+export { Container, AddButton };
