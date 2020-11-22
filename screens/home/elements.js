@@ -1,5 +1,5 @@
 import styled from 'styled-components/native';
-import { Layout } from '@ui-kitten/components';
+import { Layout, Button } from '@ui-kitten/components';
 
 const Container = styled(Layout)`
   flex-grow: 1;
@@ -7,4 +7,18 @@ const Container = styled(Layout)`
   padding-top: ${(props) => (props.pt || 0) + 20}px;
 `;
 
-export { Container };
+const AvatarSection = styled.View`
+  flex-direction: row;
+  padding: 20px 0;
+`;
+
+const TextSection = styled.View`
+  justify-content: center;
+  margin-left: 20px;
+`;
+
+const AddButton = styled(Button)`
+  margin-top: 20px;
+`;
+
+export { Container, AvatarSection, TextSection, AddButton };

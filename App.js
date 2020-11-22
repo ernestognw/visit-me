@@ -10,7 +10,6 @@ import BottomBar from '@templates/bottom-bar';
 import { AppearanceProvider } from 'react-native-appearance';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import HomeScreen from '@screens/home';
-import OptionsScreen from '@screens/options';
 import Profile from '@screens/profile';
 import Login from '@screens/login';
 import Signup from '@screens/signup';
@@ -29,8 +28,7 @@ const TabNavigation = () => {
           <>
             <BottomNavigator tabBar={(props) => <BottomBar isLogged={isLogged} {...props} />}>
               <Screen name="Home" component={HomeScreen} />
-              <Screen name="Options">{() => <OptionsScreen setIsLogged={setIsLogged} />}</Screen>
-              <Screen name="Profile" component={Profile} />
+              <Screen name="Profile">{() => <Profile setIsLogged={setIsLogged} />}</Screen>
             </BottomNavigator>
           </>
         ) : (

@@ -18,7 +18,6 @@ const BottomTabBar = ({ navigation, state, isLogged }) => {
       }}
     >
       <BottomNavigationTab icon={(props) => <Icon {...props} name="home-outline" />} />
-      <BottomNavigationTab icon={(props) => <Icon {...props} name="settings-2-outline" />} />
       <BottomNavigationTab icon={(props) => <Icon {...props} name="person-outline" />} />
     </BottomNavigation>
   );
