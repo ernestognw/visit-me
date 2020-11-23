@@ -1,30 +1,46 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Avatar, Text, Card } from '@ui-kitten/components';
-import { Container, AvatarSection, TextSection } from './elements';
+import { StatusBar } from 'expo-status-bar';
+import { firestore } from 'firebase';
+import { useAuth } from '@providers/auth';
+import { Alert } from 'react-native';
+import { Text, Card } from '@ui-kitten/components';
+import { useNavigation } from '@react-navigation/native';
+import { Container, QRButton } from './elements';
 
 const Home = () => {
+  const { accesses } = useAuth();
+
+  const { navigate } = useNavigation();
+
   return (
     <Container>
       <StatusBar style="auto" />
-      <AvatarSection>
-        <Avatar
-          size="giant"
-          source={{
-            uri:
-              'https://blockdemy-id.s3.us-east-2.amazonaws.com/users/5e67297b5de02d85cfa4b7f1/1597983282841..jpg',
-          }}
-        />
-        <TextSection>
-          <Text category="c2">Bienvenido</Text>
-          <Text category="h6">Ernesto García</Text>
-        </TextSection>
-      </AvatarSection>
       <Card status="primary">
         <Text category="c1">Has tenido</Text>
-        <Text category="h1">6</Text>
-        <Text category="c1">visitas este mes</Text>
+        <Text category="h1">{accesses.length}</Text>
+        <Text category="c1">visitas</Text>
       </Card>
+      <QRButton
+        onPress={() =>
+          navigate('QRScanner', {
+            onScanned: async ({ data }) => {
+              const snapshot = await firestore().collection('Visits').where('id', '==', data).get();
+
+              if (!snapshot.empty) {
+                let access;
+                snapshot.forEach((doc) => {
+                  access = doc.data();
+                });
+                navigate('Access', { accessId: access.id });
+              } else {
+                Alert.alert('Error', 'Este QR es inválido');
+              }
+            },
+          })
+        }
+      >
+        Escanear QR
+      </QRButton>
     </Container>
   );
 };

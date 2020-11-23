@@ -6,9 +6,7 @@ const Container = styled(Layout)`
   padding: 20px;
 `;
 
-const Content = styled(Layout)`
-  margin-top: 20px;
-`;
+const Content = styled(Layout)``;
 
 const Row = styled(Layout)`
   flex-direction: row;
@@ -20,4 +18,14 @@ const OptionText = styled(Text)`
   margin-right: auto;
 `;
 
-export { Container, Content, Row, OptionText };
+const AvatarSection = styled.View`
+  flex-direction: row;
+  padding: 20px 0;
+`;
+
+const TextSection = styled.View`
+  justify-content: center;
+  margin-left: 20px;
+`;
+
+export { Container, Content, Row, OptionText, AvatarSection, TextSection };

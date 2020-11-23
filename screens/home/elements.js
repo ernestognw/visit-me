@@ -6,18 +6,8 @@ const Container = styled(Layout)`
   padding: 0 20px;
 `;
 
-const AvatarSection = styled.View`
-  flex-direction: row;
-  padding: 20px 0;
-`;
-
-const TextSection = styled.View`
-  justify-content: center;
-  margin-left: 20px;
-`;
-
-const AddButton = styled(Button)`
+const QRButton = styled(Button)`
   margin-top: 20px;
 `;
 
-export { Container, AvatarSection, TextSection, AddButton };
+export { Container, QRButton };

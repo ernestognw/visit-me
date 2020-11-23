@@ -1,22 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import firebase from 'firebase';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { emailPattern } from '@config/constants';
 import KeyboardAwareScroll from '@templates/keyboard-aware-scroll';
-import { Icon, Button } from '@ui-kitten/components';
+import { Icon, Button, Select, SelectItem, Spinner } from '@ui-kitten/components';
 import { Content, Header, Title, Subtitle, Input, SigninButton } from './elements';
 
-const Login = ({ setIsLogged }) => {
+const options = ['Fraccionamiento 1', 'Fraccionamiento 2', 'Fraccionamiento 3'];
+
+const Signup = () => {
   const { top } = useSafeAreaInsets();
   const [form, setForm] = useState({
+    firstName: '',
+    lastName: '',
     email: '',
+    suburb: '',
     password: '',
     confirmPassword: '',
   });
   const [submittedTry, setSubmittedTry] = useState(false);
   const [isEmailError, setIsEmailError] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [noPasswordError, setNoPasswordError] = useState(true);
   const [differentPasswordsError, setDifferentPasswordsError] = useState(true);
   const { navigate } = useNavigation();
@@ -31,15 +38,40 @@ const Login = ({ setIsLogged }) => {
 
   useEffect(() => {
     setDifferentPasswordsError(form.password !== form.confirmPassword);
-  }, [form.confirmPassword]);
+  }, [form.confirmPassword, form.password]);
 
-  const submit = () => {
+  const submit = async () => {
     if (isEmailError || noPasswordError || differentPasswordsError) {
       setSubmittedTry(true);
       return;
     }
+    if (isEmailError || noPasswordError || differentPasswordsError) {
+      setSubmittedTry(true);
+      return;
+    }
+    setSubmitting(true);
+    const newUser = { ...form, suburb: options[form.suburb.row] };
+    delete newUser.confirmPassword;
 
-    setIsLogged(true);
+    const snapshot = await firebase
+      .firestore()
+      .collection('Users')
+      .where('email', '==', newUser.email)
+      .get();
+
+    if (snapshot.empty) {
+      const { user } = await firebase
+        .auth()
+        .createUserWithEmailAndPassword(newUser.email, newUser.password);
+
+      firebase.firestore().collection('Users').doc(user.uid).set({
+        email: newUser.email,
+        uid: user.uid,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        suburb: newUser.suburb,
+      });
+    }
   };
 
   return (
@@ -92,6 +124,22 @@ const Login = ({ setIsLogged }) => {
           accessoryLeft={(props) => <Icon {...props} name="menu-outline" />}
           onChangeText={(nextValue) => setForm({ ...form, lastName: nextValue })}
         />
+        <Select
+          label="Fraccionamiento"
+          placeholder="Selecciona tu fraccionamiento"
+          selectedIndex={form.suburb}
+          caption={submittedTry && !form.suburb && 'Selecciona un fraccionamiento'}
+          status={submittedTry && !form.suburb && 'warning'}
+          captionIcon={(props) =>
+            submittedTry && !form.suburb && <Icon {...props} name="alert-circle-outline" />
+          }
+          accessoryLeft={(props) => <Icon {...props} name="home-outline" />}
+          onSelect={(suburb) => setForm({ ...form, suburb })}
+        >
+          {options.map((option) => (
+            <SelectItem key={option} title={option} />
+          ))}
+        </Select>
         <Input
           autoCapitalize="none"
           autoCompleteType="password"
@@ -123,7 +171,21 @@ const Login = ({ setIsLogged }) => {
           accessoryLeft={(props) => <Icon {...props} name="unlock-outline" />}
           onChangeText={(nextValue) => setForm({ ...form, confirmPassword: nextValue })}
         />
-        <SigninButton onPress={submit}>Regístrate</SigninButton>
+        <SigninButton
+          accessoryLeft={
+            submitting
+              ? (props) => (
+                  <View {...props}>
+                    <Spinner size="small" />
+                  </View>
+                )
+              : undefined
+          }
+          disabled={submitting}
+          onPress={submit}
+        >
+          Regístrate
+        </SigninButton>
         <Button appearance="ghost" onPress={() => navigate('Login')}>
           ¿Ya tienes cuenta? Ingresa.
         </Button>
@@ -132,8 +194,4 @@ const Login = ({ setIsLogged }) => {
   );
 };
 
-Login.propTypes = {
-  setIsLogged: PropTypes.func.isRequired,
-};
-
-export default Login;
+export default Signup;

@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useAuth } from '@providers/auth';
 import { TopNavigation, TopNavigationAction, Icon, Layout } from '@ui-kitten/components';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const TopBar = ({ navigation, previous, isLogged }) => {
+const TopBar = ({ navigation, previous }) => {
   const { top } = useSafeAreaInsets();
+  const { isLogged } = useAuth();
 
   if (!isLogged) return <></>;
 
@@ -45,8 +47,7 @@ TopBar.defaultProps = {
 
 TopBar.propTypes = {
   navigation: PropTypes.object.isRequired,
-  previous: PropTypes.bool,
-  isLogged: PropTypes.bool.isRequired,
+  previous: PropTypes.object,
 };
 
 export default TopBar;

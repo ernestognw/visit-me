@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import firebase from 'firebase';
 import KeyboardAwareScroll from '@templates/keyboard-aware-scroll';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { TouchableWithoutFeedback } from 'react-native';
+import { TouchableWithoutFeedback, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { emailPattern } from '@config/constants';
-import { Icon, Button } from '@ui-kitten/components';
+import { Icon, Button, Spinner } from '@ui-kitten/components';
 import { Content, Header, Title, Subtitle, Input, SigninButton } from './elements';
 
-const Login = ({ setIsLogged }) => {
+const Login = () => {
   const { top } = useSafeAreaInsets();
   const { navigate } = useNavigation();
   const [form, setForm] = useState({
@@ -19,6 +19,8 @@ const Login = ({ setIsLogged }) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [submittedTry, setSubmittedTry] = useState(false);
   const [isEmailError, setIsEmailError] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [noUser, setNoUser] = useState(false);
   const [isPasswordError, setIsPasswordError] = useState(true);
 
   useEffect(() => {
@@ -29,13 +31,19 @@ const Login = ({ setIsLogged }) => {
     setIsPasswordError(!form.password);
   }, [form.password]);
 
-  const submit = () => {
+  const submit = async () => {
     if (isEmailError || isPasswordError) {
       setSubmittedTry(true);
       return;
     }
 
-    setIsLogged(true);
+    setSubmitting(true);
+    try {
+      await firebase.auth().signInWithEmailAndPassword(form.email, form.password);
+    } catch (err) {
+      setNoUser(true);
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -52,8 +60,8 @@ const Login = ({ setIsLogged }) => {
           value={form.email}
           label="Correo"
           placeholder="Ingresa tu correo electrónico"
-          caption={submittedTry && isEmailError && 'Ingresa un correo electrónico válido'}
           status={submittedTry && isEmailError && 'warning'}
+          caption={submittedTry && isEmailError && 'Ingresa un correo electrónico válido'}
           captionIcon={(props) =>
             submittedTry && isEmailError && <Icon {...props} name="alert-circle-outline" />
           }
@@ -66,7 +74,9 @@ const Login = ({ setIsLogged }) => {
           value={form.password}
           label="Contraseña"
           placeholder="Ingresa tu contraseña"
-          status={submittedTry && isPasswordError && 'warning'}
+          status={((submittedTry && isPasswordError) || noUser) && 'warning'}
+          caption={noUser && 'Usuario no encontrado. Verifica tus credenciales'}
+          captionIcon={(props) => noUser && <Icon {...props} name="alert-circle-outline" />}
           accessoryRight={(props) => (
             <TouchableWithoutFeedback onPress={() => setSecureTextEntry(!secureTextEntry)}>
               <Icon {...props} name={secureTextEntry ? 'eye-off' : 'eye'} />
@@ -80,6 +90,16 @@ const Login = ({ setIsLogged }) => {
           ¿Olvidaste tu contraseña?
         </Button>
         <SigninButton
+          accessoryLeft={
+            submitting
+              ? (props) => (
+                  <View {...props}>
+                    <Spinner size="small" />
+                  </View>
+                )
+              : undefined
+          }
+          disabled={submitting}
           accessoryRight={(props) => <Icon {...props} name="arrowhead-right-outline" />}
           onPress={submit}
         >
@@ -91,10 +111,6 @@ const Login = ({ setIsLogged }) => {
       </Content>
     </KeyboardAwareScroll>
   );
-};
-
-Login.propTypes = {
-  setIsLogged: PropTypes.func.isRequired,
 };
 
 export default Login;

@@ -1,19 +1,36 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import firebase from 'firebase';
+import { useAuth } from '@providers/auth';
 import { StatusBar } from 'expo-status-bar';
 import { TouchableOpacity } from 'react-native';
-import { Text, Divider, Icon, Button, Card, Modal, useTheme } from '@ui-kitten/components';
-import { Container, Content, Row, OptionText } from './elements';
+import { Avatar, Text, Divider, Icon, Button, Card, Modal, useTheme } from '@ui-kitten/components';
+import { Container, Content, Row, OptionText, AvatarSection, TextSection } from './elements';
 
-const Options = ({ setIsLogged }) => {
+const Options = () => {
   const [exitModal, toggleExitModal] = useState(false);
   const theme = useTheme();
+
+  const { user } = useAuth();
 
   return (
     <>
       <Container>
         <StatusBar style="auto" />
-        <Text category="h5">Profile</Text>
+        <AvatarSection>
+          <Avatar
+            size="giant"
+            source={{
+              uri:
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgA1uaZBxqEjCa0JW4PR3LnWKfRJMDCdVivg&usqp=CAU',
+            }}
+          />
+          <TextSection>
+            <Text category="c2">Bienvenido</Text>
+            <Text category="h6">
+              {user.firstName} {user.lastName}
+            </Text>
+          </TextSection>
+        </AvatarSection>
         <Content>
           <TouchableOpacity onPress={() => toggleExitModal(true)}>
             <Row>
@@ -36,7 +53,7 @@ const Options = ({ setIsLogged }) => {
             style={{ marginTop: 10 }}
             status="danger"
             appearance="outline"
-            onPress={() => setIsLogged(false)}
+            onPress={() => firebase.auth().signOut()}
           >
             Sí, salir.
           </Button>
@@ -47,10 +64,6 @@ const Options = ({ setIsLogged }) => {
       </Modal>
     </>
   );
-};
-
-Options.propTypes = {
-  setIsLogged: PropTypes.func.isRequired,
 };
 
 export default Options;

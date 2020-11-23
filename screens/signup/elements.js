@@ -10,8 +10,8 @@ const Header = styled(Layout)`
   padding: 0 20px;
   padding-top: ${(props) => (props.pt || 0) + 20}px;
   background-color: ${(props) => props.theme['color-primary-600']};
-  padding-top: 100px;
-  padding-bottom: 80px;
+  padding-top: 60px;
+  padding-bottom: 40px;
   align-items: center;
 `;
 

@@ -1,68 +1,63 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as eva from '@eva-design/eva';
+import '@config/firebase';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { ThemeProvider } from 'styled-components/native';
 import BottomBar from '@templates/bottom-bar';
+import { AuthProvider, useAuth } from '@providers/auth';
 import TopBar from '@templates/top-bar';
-import { AppearanceProvider } from 'react-native-appearance';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import New from '@screens/new';
 import Home from '@screens/home';
 import Profile from '@screens/profile';
 import Login from '@screens/login';
+import QRScanner from '@screens/qr-scanner';
+import Access from '@screens/access';
 import Signup from '@screens/signup';
+import AccessList from '@screens/access-list';
 import RecoverPassword from '@screens/recover-password';
 
 const { Navigator: BottomNavigator, Screen: BottomScreen } = createBottomTabNavigator();
 const { Navigator: AuthStackNavigator, Screen: AuthScreen } = createStackNavigator();
 const { Navigator: AppStackNavigator, Screen: AppScreen } = createStackNavigator();
 
-// eslint-disable-next-line react/prop-types
-const AppNavigation = ({ isLogged, setIsLogged }) => (
-  <AppStackNavigator headerMode="screen">
-    <BottomScreen
-      name="Tabs"
-      options={{ header: (props) => <TopBar isLogged={isLogged} {...props} /> }}
-    >
-      {(props) => <TabNavigation isLogged={isLogged} setIsLogged={setIsLogged} {...props} />}
-    </BottomScreen>
-    <BottomScreen
-      options={{ header: (props) => <TopBar isLogged={isLogged} {...props} /> }}
-      name="New"
-      component={New}
-    />
-  </AppStackNavigator>
-);
-
-// eslint-disable-next-line react/prop-types
-const TabNavigation = ({ isLogged, setIsLogged }) => (
-  <BottomNavigator tabBar={(props) => <BottomBar isLogged={isLogged} {...props} />}>
+const TabNavigation = () => (
+  <BottomNavigator tabBar={(props) => <BottomBar {...props} />}>
     <BottomScreen name="Home" component={Home} />
-    <BottomScreen name="Profile">{() => <Profile setIsLogged={setIsLogged} />}</BottomScreen>
+    <BottomScreen name="AccessList" component={AccessList} />
+    <BottomScreen name="Profile" component={Profile} />
   </BottomNavigator>
 );
 
-// eslint-disable-next-line react/prop-types
-const AuthNavigation = ({ setIsLogged }) => (
+const AppNavigation = () => (
+  <AppStackNavigator headerMode="screen">
+    <AppScreen name="Tabs" options={{ header: TopBar }} component={TabNavigation} />
+    <AppScreen options={{ header: TopBar }} name="New" component={New} />
+    <AppScreen options={{ header: TopBar }} name="Access" component={Access} />
+    <AppScreen name="QRScanner" options={{ header: TopBar }} component={QRScanner} />
+  </AppStackNavigator>
+);
+
+const AuthNavigation = () => (
   <AuthStackNavigator headerMode="none">
-    <AuthScreen name="Login">{() => <Login setIsLogged={setIsLogged} />}</AuthScreen>
-    <AuthScreen name="Signup">{() => <Signup setIsLogged={setIsLogged} />}</AuthScreen>
-    <AuthScreen name="RecoverPassword">
-      {() => <RecoverPassword setIsLogged={setIsLogged} />}
-    </AuthScreen>
+    <AuthScreen name="Login" component={Login} />
+    <AuthScreen name="Signup" component={Signup} />
+    <AuthScreen name="RecoverPassword" component={RecoverPassword} />
   </AuthStackNavigator>
 );
 
 const MainNavigation = () => {
-  const [isLogged, setIsLogged] = useState(true);
+  const { isLogged, loading } = useAuth();
 
-  if (isLogged) return <AppNavigation isLogged={isLogged} setIsLogged={setIsLogged} />;
+  if (loading) return <></>;
 
-  return <AuthNavigation setIsLogged={setIsLogged} />;
+  if (isLogged) return <AppNavigation />;
+
+  return <AuthNavigation />;
 };
 
 const App = () => {
@@ -71,13 +66,13 @@ const App = () => {
       <IconRegistry icons={EvaIconsPack} />
       <NavigationContainer>
         <SafeAreaProvider>
-          <AppearanceProvider>
-            <ThemeProvider theme={eva.dark}>
-              <ApplicationProvider {...eva} theme={eva.dark}>
+          <ThemeProvider theme={eva.dark}>
+            <ApplicationProvider {...eva} theme={eva.dark}>
+              <AuthProvider>
                 <MainNavigation />
-              </ApplicationProvider>
-            </ThemeProvider>
-          </AppearanceProvider>
+              </AuthProvider>
+            </ApplicationProvider>
+          </ThemeProvider>
         </SafeAreaProvider>
       </NavigationContainer>
     </>
